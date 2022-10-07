@@ -42,7 +42,7 @@ def count_strings(lens_export, strings,
 
     log.info("Removing quotes from columns.")
     for column in keyword_columns+text_columns:
-        lens_export.loc[:,column] = lens_export[column].str.replace('"','')
+        lens_export.loc[:,column] = lens_export[column].astype(str).str.replace('"','')
     strings = [str(s).replace('"',"") for s in strings]
 
 

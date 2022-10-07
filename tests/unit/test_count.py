@@ -11,7 +11,7 @@ TEST_EXPORT_SHORT = pd.read_csv(RESOURCES_FOLDER+"short.csv")
 def test_count_strings():
     keywords = ut.count_separated_strings(TEST_EXPORT_SHORT[FIELDS_OF_STUDY_COL])
     counts = cnt.count_strings(TEST_EXPORT_SHORT, list(keywords.index))
-    print(counts)
+    assert counts.loc["Nanomaterials", "Count in All Columns"] == 2
     
 def test_get_keyword_columns():
     df = pd.DataFrame({1:{"a":"kw; kw2", "b":None}, 2:{"a":"kw3", "b":"kw4; kw5"}})
@@ -33,3 +33,12 @@ def test_get_keyword_columns():
     column = cnt._get_keyword_columns(df)
     assert column["a"] == "kw6"
     assert column["b"] == "kw; kw4; kw5; kw7"
+
+def test_count_strings_non_string_column():
+    integer_for_abstract_export = TEST_EXPORT_SHORT.copy()
+    integer_for_abstract_export["Abstract"] = 1
+    keywords = ut.count_separated_strings(TEST_EXPORT_SHORT[FIELDS_OF_STUDY_COL])
+    counts = cnt.count_strings(integer_for_abstract_export, list(keywords.index))
+    assert counts.loc["Nanomaterials", "Count in All Columns"] == 2
+    assert counts.loc["Nanomaterials", "Count in Abstract"] == 0
+
